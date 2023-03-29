@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: p1-deployment
+  labels:
+    app: p1-deployment
+    type: http-echo
+spec:
+  template:
+    metadata:
+      name: p1-pod
+      labels:
+        app: p1-deployment
+        type: http-echo
+    spec:
+      containers:
+      - name: http-echo 
+        image: hashicorp/http-echo:0.2.3
+        args: 
+          - "-text= === Hello world!!! ==="
+  replicas: 1
+  selector:
+    matchLabels:
+      type: http-echo

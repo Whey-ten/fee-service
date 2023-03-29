@@ -1,0 +1,57 @@
+version: '3.1'
+
+volumes:
+  postgres_data:
+    driver: local
+  postgres_data2:
+    driver: local
+
+networks:
+  postgres1:
+    driver: bridge
+  postgres2:
+    driver: bridge
+
+services:
+  java:
+    container_name: app
+    build: .
+    ports:
+      - "8080:8080"
+    networks:
+      - postgres1
+      - postgres2
+    depends_on:
+      - postgres1
+      - postgres2
+    environment:
+      - SPRING_PROFILES_ACTIVE=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres1:5432/cloud
+
+  postgres1:
+    container_name: cloud2
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres1
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cloud
+
+  postgres2:
+    container_name: cloud3
+    build: ./docker/postgresql
+    volumes:
+      - postgres_data2:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - postgres2
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cloud

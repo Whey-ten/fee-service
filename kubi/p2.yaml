@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: p2-deployment
+  labels:
+    app: p2-deployment
+    type: webcolor
+spec:
+  template:
+    metadata:
+      name: p2-pod
+      labels:
+        app: p2-deployment
+        type: webcolor
+    spec:
+      containers:
+      - name: webcolor 
+        image: kodekloud/webapp-color
+        envFrom:
+        - configMapRef:
+            name: webcolor-configmap
+  replicas: 1
+  selector:
+    matchLabels:
+      type: webcolor

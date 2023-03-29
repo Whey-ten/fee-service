@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: s1-service
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    targetPort: 5678
+    port: 5678
+  selector:
+    app: p1-deployment
